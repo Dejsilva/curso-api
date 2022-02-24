@@ -1,5 +1,6 @@
 package br.com.dejs.api.resources.exceptions;
 
+import br.com.dejs.api.services.exceptions.DataIntegratyViolationException;
 import br.com.dejs.api.services.exceptions.ObjectNotFoundExceptions;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,18 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(ObjectNotFoundExceptions.class)
     public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundExceptions ex, HttpServletRequest request) {
-
         StandardError error =
-                new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
+                new StandardError(LocalDateTime.now(),
+                        HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+
+    }
+    @ExceptionHandler(DataIntegratyViolationException.class)
+    public ResponseEntity<StandardError> dataIntegrationViolationExcception(DataIntegratyViolationException ex, HttpServletRequest request) {
+        StandardError error =
+                new StandardError(LocalDateTime.now(),
+                        HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 
     }
 
