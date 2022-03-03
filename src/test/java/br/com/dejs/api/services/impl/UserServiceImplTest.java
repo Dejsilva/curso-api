@@ -7,16 +7,15 @@ import br.com.dejs.api.services.exceptions.ObjectNotFoundExceptions;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.mockito.stubbing.OngoingStubbing;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
 
+import static net.bytebuddy.matcher.ElementMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -94,7 +93,18 @@ class UserServiceImplTest {
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnSuccess() {
+
+        when(repository.save(ArgumentMatchers.any())).thenReturn(user);
+
+        User response = service.create(userDTO);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getNome());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(SENHA, response.getSenha());
     }
 
     @Test
