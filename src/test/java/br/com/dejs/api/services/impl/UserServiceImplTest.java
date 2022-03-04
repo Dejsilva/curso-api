@@ -5,6 +5,7 @@ import br.com.dejs.api.domain.dto.UserDTO;
 import br.com.dejs.api.repositories.UserRepository;
 import br.com.dejs.api.services.exceptions.DataIntegratyViolationException;
 import br.com.dejs.api.services.exceptions.ObjectNotFoundExceptions;
+import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ class UserServiceImplTest {
     public static final int INDEX = 0;
     public static final String E_MAIL_JÁ_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema";
     public static final String E_MAIL_JÁ_CADASTRADO_NO_SISTEMA1 = "E-mail já cadastrado no sistema";
+    public static final String OBJETO_NAO_ENCONTRADO = "Objeto nao encontrado";
     @InjectMocks
     private UserServiceImpl service;
 
@@ -163,7 +165,19 @@ class UserServiceImplTest {
         when(repository.findById(anyInt())).thenReturn(optionalUser);
         doNothing().when(repository).deleteById(anyInt());
        service.delete(ID);
-        verify(repository, Mockito.times(2)).deleteById(anyInt());
+        verify(repository, Mockito.times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    void deleteWidthObjectNotFoundException() {
+        when(repository.findById(anyInt()))
+                .thenThrow(new ObjectNotFoundExceptions(OBJETO_NAO_ENCONTRADO));
+        try {
+            service.delete(ID);
+        } catch (Exception ex) {
+            assertEquals(ObjectNotFoundExceptions.class, ex.getClass());
+            assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
+        }
     }
 
 
