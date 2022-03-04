@@ -12,6 +12,8 @@ import org.mockito.*;
 import org.mockito.stubbing.OngoingStubbing;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.test.web.client.ExpectedCount;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.ExpectedCount.times;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -45,6 +48,7 @@ class UserServiceImplTest {
     private User user;
     private UserDTO userDTO;
     private Optional<User> optionalUser;
+
 
 
     @BeforeEach
@@ -154,10 +158,15 @@ class UserServiceImplTest {
     }
 
 
-
     @Test
-    void delete() {
+    void deleteWithSuccess() {
+        when(repository.findById(anyInt())).thenReturn(optionalUser);
+        doNothing().when(repository).deleteById(anyInt());
+       service.delete(ID);
+        verify(repository, Mockito.times(2)).deleteById(anyInt());
     }
+
+
 
     private void startUser() {
         user = new User(ID, NAME, EMAIL, SENHA);
