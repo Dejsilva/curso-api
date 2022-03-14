@@ -32,8 +32,8 @@ class UserResourceTest {
     public static final String E_MAIL_JÁ_CADASTRADO_NO_SISTEMA1 = "E-mail já cadastrado no sistema";
     public static final String OBJETO_NAO_ENCONTRADO = "Objeto nao encontrado";
 
-    private User user;
-    private UserDTO userDto;
+    private User user = new User();
+    private UserDTO userDto = new UserDTO();
 
     @InjectMocks
     private UserResource resource;
