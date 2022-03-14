@@ -12,7 +12,6 @@ import javax.persistence.Column;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class UserDTO {
 
     private Integer id;
